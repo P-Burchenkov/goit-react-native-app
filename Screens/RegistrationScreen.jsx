@@ -13,10 +13,19 @@ import { AntDesign } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 
 const bgImage = require("../assets/images/background.jpg");
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+};
 
 export default function RegistrationScreen() {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [state, setstate] = useState(initialState);
+  const [isLoginFocused, setIsLoginFocused] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -38,12 +47,18 @@ export default function RegistrationScreen() {
     });
   };
 
-  const hideKeyboard = () => {
+  const handlesubmit = () => {
+    console.log(state);
+    setstate(initialState);
     Keyboard.dismiss();
   };
 
   return (
-    <TouchableWithoutFeedback onPress={hideKeyboard}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground source={bgImage} style={styles.bgImage}>
           <KeyboardAvoidingView
@@ -52,7 +67,7 @@ export default function RegistrationScreen() {
             <View
               style={{
                 ...styles.form,
-                // marginBottom: keyboardStatus ? -140 : 0,
+                paddingBottom: keyboardStatus ? 120 : 45,
               }}
             >
               <View style={styles.fotoWrapper}>
@@ -67,21 +82,64 @@ export default function RegistrationScreen() {
               <View style={{ marginHorizontal: 16 }}>
                 <Text style={styles.registrationTitle}>Реєстрація</Text>
                 <TextInput
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: isLoginFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="логін"
                   placeholderTextColor="#BDBDBD"
+                  value={state.login}
+                  onChangeText={(value) => {
+                    setstate((prevState) => ({ ...prevState, login: value }));
+                  }}
+                  onFocus={() => {
+                    setIsLoginFocused(true);
+                  }}
+                  onBlur={() => {
+                    setIsLoginFocused(false);
+                  }}
                 />
                 <TextInput
                   placeholderTextColor="#BDBDBD"
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: isEmailFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Адреса електронної пошти"
+                  value={state.email}
+                  onChangeText={(value) => {
+                    setstate((prevState) => ({ ...prevState, email: value }));
+                  }}
+                  onFocus={() => {
+                    setIsEmailFocused(true);
+                  }}
+                  onBlur={() => {
+                    setIsEmailFocused(false);
+                  }}
                 />
                 <TextInput
-                  style={{ ...styles.input, paddingRight: 100 }}
+                  style={{
+                    ...styles.input,
+                    paddingRight: 100,
+                    borderColor: isPasswordFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
                   secureTextEntry={isPasswordShown}
                   clearButtonMode="always"
+                  value={state.password}
+                  onChangeText={(value) => {
+                    setstate((prevState) => ({
+                      ...prevState,
+                      password: value,
+                    }));
+                  }}
+                  onFocus={() => {
+                    setIsPasswordFocused(true);
+                  }}
+                  onBlur={() => {
+                    setIsPasswordFocused(false);
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.btnShowPassword}
@@ -95,7 +153,7 @@ export default function RegistrationScreen() {
                 <TouchableOpacity
                   style={styles.btn}
                   activeOpacity={0.8}
-                  onPress={hideKeyboard}
+                  onPress={handlesubmit}
                 >
                   <Text style={styles.btnText}>Зареєструватися</Text>
                 </TouchableOpacity>
@@ -126,7 +184,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 92,
-    paddingBottom: 45,
   },
   fotoWrapper: {
     position: "absolute",

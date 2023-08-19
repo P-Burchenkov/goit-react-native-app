@@ -13,10 +13,17 @@ import {
 import { useState, useEffect } from "react";
 
 const bgImage = require("../assets/images/background.jpg");
+const initialState = {
+  email: "",
+  password: "",
+};
 
 export default function RegistrationScreen() {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [state, setstate] = useState(initialState);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -38,12 +45,18 @@ export default function RegistrationScreen() {
     });
   };
 
-  const hideKeyboard = () => {
+  const handlesubmit = () => {
+    console.log(state);
+    setstate(initialState);
     Keyboard.dismiss();
   };
 
   return (
-    <TouchableWithoutFeedback onPress={hideKeyboard}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground source={bgImage} style={styles.bgImage}>
           <KeyboardAvoidingView
@@ -52,23 +65,53 @@ export default function RegistrationScreen() {
             <View
               style={{
                 ...styles.form,
-                // marginBottom: keyboardStatus ? -240 : 0,
+                paddingBottom: keyboardStatus ? 240 : 111,
               }}
             >
               <View style={{ marginHorizontal: 16 }}>
                 <Text style={styles.registrationTitle}>Увійти</Text>
                 <TextInput
                   placeholderTextColor="#BDBDBD"
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: isEmailFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Адреса електронної пошти"
+                  value={state.email}
+                  onChangeText={(value) => {
+                    setstate((prevState) => ({ ...prevState, email: value }));
+                  }}
+                  onFocus={() => {
+                    setIsEmailFocused(true);
+                  }}
+                  onBlur={() => {
+                    setIsEmailFocused(false);
+                  }}
                 />
                 <TextInput
                   name="password"
-                  style={{ ...styles.input, paddingRight: 100 }}
+                  style={{
+                    ...styles.input,
+                    paddingRight: 100,
+                    borderColor: isPasswordFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
                   secureTextEntry={isPasswordShown}
                   clearButtonMode="always"
+                  value={state.password}
+                  onChangeText={(value) => {
+                    setstate((prevState) => ({
+                      ...prevState,
+                      password: value,
+                    }));
+                  }}
+                  onFocus={() => {
+                    setIsPasswordFocused(true);
+                  }}
+                  onBlur={() => {
+                    setIsPasswordFocused(false);
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.btnShowPassword}
@@ -79,11 +122,10 @@ export default function RegistrationScreen() {
                     {isPasswordShown ? "Показати" : "Сховати"}
                   </Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity
                   style={styles.btn}
                   activeOpacity={0.8}
-                  onPress={hideKeyboard}
+                  onPress={handlesubmit}
                 >
                   <Text style={styles.btnText}>Увійти</Text>
                 </TouchableOpacity>
@@ -116,7 +158,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 32,
-    paddingBottom: 111,
   },
   registrationTitle: {
     marginBottom: 33,
@@ -131,7 +172,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: "#E8E8E8",
     fontFamily: "Roboto-Regular",
   },
 
@@ -160,7 +200,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontFamily: "Roboto-Regular",
   },
-  link: {},
   linkText: {
     marginTop: 16,
     fontSize: 16,
