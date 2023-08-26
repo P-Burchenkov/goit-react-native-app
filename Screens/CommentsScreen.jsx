@@ -1,11 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function PostScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>PostScreen</Text>
-    </View>
-  );
+export default function CommentScreen() {
+  <View style={styles.container}>
+    <Text>CommentScreen</Text>
+  </View>;
 }
 
 const styles = StyleSheet.create({

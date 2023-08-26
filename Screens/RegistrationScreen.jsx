@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const bgImage = require("../assets/images/background.jpg");
 const initialState = {
@@ -47,10 +48,13 @@ export default function RegistrationScreen() {
     });
   };
 
+  const navigation = useNavigation();
+
   const handlesubmit = () => {
     console.log(state);
     setstate(initialState);
     Keyboard.dismiss();
+    navigation.navigate("Home");
   };
 
   return (
@@ -61,26 +65,26 @@ export default function RegistrationScreen() {
     >
       <View style={styles.container}>
         <ImageBackground source={bgImage} style={styles.bgImage}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: keyboardStatus ? 140 : 45,
+            }}
           >
-            <View
-              style={{
-                ...styles.form,
-                paddingBottom: keyboardStatus ? 120 : 45,
-              }}
-            >
-              <View style={styles.fotoWrapper}>
-                <TouchableOpacity style={styles.addFotoBtn}>
-                  <AntDesign
-                    name="pluscircleo"
-                    size={24}
-                    style={styles.addIcon}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={{ marginHorizontal: 16 }}>
-                <Text style={styles.registrationTitle}>Реєстрація</Text>
+            <View style={styles.fotoWrapper}>
+              <TouchableOpacity style={styles.addFotoBtn}>
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  style={styles.addIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{ marginHorizontal: 16 }}>
+              <Text style={styles.registrationTitle}>Реєстрація</Text>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
                 <TextInput
                   style={{
                     ...styles.input,
@@ -99,6 +103,10 @@ export default function RegistrationScreen() {
                     setIsLoginFocused(false);
                   }}
                 />
+              </KeyboardAvoidingView>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
                 <TextInput
                   placeholderTextColor="#BDBDBD"
                   style={{
@@ -117,6 +125,10 @@ export default function RegistrationScreen() {
                     setIsEmailFocused(false);
                   }}
                 />
+              </KeyboardAvoidingView>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
                 <TextInput
                   style={{
                     ...styles.input,
@@ -141,28 +153,34 @@ export default function RegistrationScreen() {
                     setIsPasswordFocused(false);
                   }}
                 />
-                <TouchableOpacity
-                  style={styles.btnShowPassword}
-                  activeOpacity={0.8}
-                  onPress={toglePassword}
-                >
-                  <Text style={styles.btnShowPasswordText}>
-                    {isPasswordShown ? "Показати" : "Сховати"}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.btn}
-                  activeOpacity={0.8}
-                  onPress={handlesubmit}
-                >
-                  <Text style={styles.btnText}>Зареєструватися</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.link} activeOpacity={0.8}>
-                  <Text style={styles.linkText}>Вже є акаунт? Увійти</Text>
-                </TouchableOpacity>
-              </View>
+              </KeyboardAvoidingView>
+              <TouchableOpacity
+                style={styles.btnShowPassword}
+                activeOpacity={0.8}
+                onPress={toglePassword}
+              >
+                <Text style={styles.btnShowPasswordText}>
+                  {isPasswordShown ? "Показати" : "Сховати"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                activeOpacity={0.8}
+                onPress={handlesubmit}
+              >
+                <Text style={styles.btnText}>Зареєструватися</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.link}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate("Login");
+                }}
+              >
+                <Text style={styles.linkText}>Вже є акаунт? Увійти</Text>
+              </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
+          </View>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
